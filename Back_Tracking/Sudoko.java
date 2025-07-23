@@ -5,8 +5,8 @@ class Main{
     public static boolean solveSuduko(int board[][]){
         for(int row=0;row<SIZE;row++){
             for(int col=0;col<SIZE;col++){
-                if(board[row][col]==0){
-                    for(int num=1;num<=SIZE;num++){
+                if(board[row][col]==0){ //is the cell empty?
+                    for(int num=1;num<=SIZE;num++){ //insert what value
                         if(isValid(board,row,col,num)){
                             board[row][col]=num;
                             if(solveSuduko(board))
