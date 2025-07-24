@@ -8,13 +8,13 @@ class DirectedGraph<T> {
     }
 
     public void addVertex(T vertex) {
-        adjList.putIfAbsent(vertex, new ArrayList<>());
+        adjList.putIfAbsent(vertex, new ArrayList<>());   //if the entry and the key already not exsists
     }
 
     public void addEdge(T source, T destination) {
         addVertex(source);
         addVertex(destination);
-        adjList.get(source).add(destination);
+        adjList.get(source).add(destination);   //map.get(key) -> get the value[which is a list]    map.get(key).add(val) -> adds values the list
     }
 
     public void removeVertex(T vertex) {
