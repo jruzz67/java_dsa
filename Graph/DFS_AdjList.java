@@ -1,99 +1,139 @@
 import java.util.*;
 
-class DirectedGraph<T> {
-    private Map<T, List<T>> adjList;
+// Graph class using HashMap for adjacency list
+class GraphHashMap {
+    // Adjacency list: Maps vertex to list of neighbors
+    private Map<Integer, List<Integer>> adjList;
+    // Store DFS traversal order
+    private List<Integer> dfsOrder;
 
-    public DirectedGraph() {
+    // Constructor: Initialize for N vertices
+    GraphHashMap(int vertices) {
         adjList = new HashMap<>();
-    }
-
-    public void addVertex(T vertex) {
-        adjList.putIfAbsent(vertex, new ArrayList<>());   //if the entry and the key already not exsists
-    }
-
-    public void addEdge(T source, T destination) {
-        addVertex(source);
-        addVertex(destination);
-        adjList.get(source).add(destination);   //map.get(key) -> get the value[which is a list]    map.get(key).add(val) -> adds values the list
-    }
-
-    public void removeVertex(T vertex) {
-        adjList.remove(vertex);
-        for (List<T> neighbors : adjList.values()) {
-            neighbors.remove(vertex);
+        for (int i = 0; i < vertices; i++) {
+            adjList.put(i, new ArrayList<>()); // Pre-add vertices 0 to N-1
         }
+        dfsOrder = new ArrayList<>();
     }
 
-    public void removeEdge(T source, T destination) {
-        List<T> neighbors = adjList.get(source);
-        if (neighbors != null) {
-            neighbors.remove(destination);
-        }
+    // Add undirected edge: u ↔ v
+    void addEdge(int u, int v) {
+        adjList.get(u).add(v);
+        adjList.get(v).add(u);
     }
 
-    public boolean hasEdge(T source, T destination) {
-        List<T> neighbors = adjList.get(source);
-        return neighbors != null && neighbors.contains(destination);
+    // DFS traversal starting from vertex 0
+    void dfs() {
+        Set<Integer> visited = new HashSet<>();
+        dfsOrder.clear();
+        dfsUtil(0, visited);
     }
 
-    public List<T> getNeighbors(T vertex) {
-        return adjList.getOrDefault(vertex, new ArrayList<>());
-    }
-
-    public void printGraph() {
-        for (T vertex : adjList.keySet()) {
-            System.out.println(vertex + " -> " + adjList.get(vertex));
-        }
-    }
-
-    // Depth-First Search starting from a given vertex
-    public void dfs(T start) {
-        Set<T> visited = new HashSet<>();
-        dfsUtil(start, visited);
-    }
-
-    // Helper method for recursive DFS
-    private void dfsUtil(T vertex, Set<T> visited) {
-        // Mark the current vertex as visited and print it
+    // Recursive DFS helper
+    private void dfsUtil(int vertex, Set<Integer> visited) {
         visited.add(vertex);
-        System.out.print(vertex + " ");
-
-        // Visit all unvisited neighbors
-        for (T neighbor : getNeighbors(vertex)) {
+        dfsOrder.add(vertex); // Add to traversal order
+        for (int neighbor : adjList.get(vertex)) {
             if (!visited.contains(neighbor)) {
                 dfsUtil(neighbor, visited);
             }
         }
     }
 
-    // DFS for the entire graph (handles disconnected components)
-    public void dfsAll() {
-        Set<T> visited = new HashSet<>();
-        for (T vertex : adjList.keySet()) {
-            if (!visited.contains(vertex)) {
-                dfsUtil(vertex, visited);
-            }
+    // Get DFS order for printing
+    List<Integer> getDFSOrder() {
+        return dfsOrder;
+    }
+}
+
+// Graph class using array of Lists for adjacency list
+class GraphList {
+    // Adjacency list: Array where adjList[i] is neighbors of vertex i
+    private List<Integer>[] adjList;
+    // Store DFS traversal order
+    private List<Integer> dfsOrder;
+
+    // Constructor: Initialize for N vertices
+    @SuppressWarnings("unchecked")
+    GraphList(int vertices) {
+        adjList = new List[vertices];
+        for (int i = 0; i < vertices; i++) {
+            adjList[i] = new ArrayList<>();
         }
-        System.out.println(); // Newline after traversal
+        dfsOrder = new ArrayList<>();
     }
 
+    // Add undirected edge: u ↔ v
+    void addEdge(int u, int v) {
+        adjList[u].add(v);
+        adjList[v].add(u);
+    }
+
+    // DFS traversal starting from vertex 0
+    void dfs() {
+        boolean[] visited = new boolean[adjList.length];
+        dfsOrder.clear();
+        dfsUtil(0, visited);
+    }
+
+    // Recursive DFS helper
+    private void dfsUtil(int vertex, boolean[] visited) {
+        visited[vertex] = true;
+        dfsOrder.add(vertex); // Add to traversal order
+        for (int neighbor : adjList[vertex]) {
+            if (!visited[neighbor]) {
+                dfsUtil(neighbor, visited);
+            }
+        }
+    }
+
+    // Get DFS order for printing
+    List<Integer> getDFSOrder() {
+        return dfsOrder;
+    }
+}
+
+class Main {
     public static void main(String[] args) {
-        DirectedGraph<String> graph = new DirectedGraph<>();
-        // Add edges
-        graph.addEdge("A", "B"); // A -> B
-        graph.addEdge("A", "C"); // A -> C
-        graph.addEdge("B", "D"); // B -> D
-        graph.addEdge("C", "D"); // C -> D
-        graph.addEdge("D", "A"); // D -> A (creates a cycle)
-        graph.addEdge("E", "F"); // E -> F (disconnected component)
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Graph:");
-        graph.printGraph();
+        // Read vertices and edges
+        int N = scanner.nextInt(); // Number of vertices
+        int E = scanner.nextInt(); // Number of edges
 
-        System.out.println("\nDFS starting from A:");
-        graph.dfs("A");
+        // Create graphs
+        GraphHashMap graphHashMap = new GraphHashMap(N);
+        GraphList graphList = new GraphList(N);
 
-        System.out.println("\nDFS for entire graph:");
-        graph.dfsAll();
+        // Read and add edges
+        for (int i = 0; i < E; i++) {
+            int u = scanner.nextInt();
+            int v = scanner.nextInt();
+            graphHashMap.addEdge(u, v);
+            graphList.addEdge(u, v); // Same edges for both
+        }
+
+        // Perform DFS on both graphs
+        graphHashMap.dfs();
+        graphList.dfs();
+
+        // Print DFS order (same for both, as graph structure is identical)
+        System.out.println("DFS Order (HashMap):");
+        List<Integer> orderHashMap = graphHashMap.getDFSOrder();
+        for (int i = 0; i < orderHashMap.size(); i++) {
+            System.out.print(orderHashMap.get(i));
+            if (i < orderHashMap.size() - 1) System.out.print(" ");
+        }
+        System.out.println();
+
+        System.out.println("DFS Order (List):");
+        List<Integer> orderList = graphList.getDFSOrder();
+        for (int i = 0; i < orderList.size(); i++) {
+            System.out.print(orderList.get(i));
+            if (i < orderList.size() - 1) System.out.print(" ");
+        }
+        System.out.println();
+
+        scanner.close();
     }
 }
