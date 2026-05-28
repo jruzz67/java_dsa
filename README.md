@@ -37,10 +37,15 @@ When adding new problem solutions, the file name **MUST** be named based on the 
 - Example: `GreatestCommonDivisor.java`, `SudokuSolver.java`.
 - The public class name inside the file must exactly match the file name.
 
-### 3. Modifying Existing Code (Strictly Prohibited)
+### 3. Check for Existing Problems (No Duplicates)
+Before adding any new problem solution (whether manually or via Neetcode sync), you **MUST** perform a name-wise check across the repository.
+- Search for the problem name and any alternative/equivalent names (e.g. `ContainsDuplicate` vs `DuplicateInteger`, `TwoSum` vs `TwoIntegerSum`).
+- If a file for the problem already exists, **DO NOT** create a duplicate file under a different name. You may only update the existing file if explicitly instructed by the user.
+
+### 4. Modifying Existing Code (Strictly Prohibited)
 **DO NOT** change the logic of existing code. You are not allowed to refactor or rewrite the core algorithms unless explicitly requested by the user. Only one code implementation is allowed per problem.
 
-### 4. Testcases
+### 5. Testcases
 When adding new code or reviewing existing code, you must add an example input and output as a testcase at the very end of the file.
 Use the following format as a multi-line comment:
 

@@ -1,11 +1,17 @@
+import java.util.HashSet;
+import java.util.Set;
+
 public class DuplicateInteger {
     public boolean hasDuplicate(int[] nums) {
-        HashMap<Integer,Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(nums[i])) {
+        return containsDuplicate(nums);
+    }
+
+    public boolean containsDuplicate(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            if (!set.add(num)) {
                 return true;
             }
-            map.put(nums[i],1);
         }
         return false;
     }
@@ -13,6 +19,10 @@ public class DuplicateInteger {
 
 /*
  * Testcase:
- * Input: <example input>
- * Output: <example output>
+ * Input: nums = [1,2,3,1]
+ * Output: true
+ *
+ * Testcase:
+ * Input: nums = [1,2,3,4]
+ * Output: false
  */
