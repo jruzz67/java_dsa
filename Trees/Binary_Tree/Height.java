@@ -48,7 +48,7 @@ class Binary{
         display(root.right);
     }
 }
-class Main{
+public class Height{
     public static void main(String aaa[]){
         Scanner s=new Scanner(System.in);
         int n=s.nextInt();
@@ -60,3 +60,13 @@ class Main{
         System.out.print("\n"+b.height());
     }
 }
+
+/*
+ * Testcase:
+ * Input: 
+ * 5
+ * 1 2 3 4 5
+ * Output: 
+ * 1 2 4 5 3 
+ * 3
+ */
